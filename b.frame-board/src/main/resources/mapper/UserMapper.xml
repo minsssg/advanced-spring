@@ -1,0 +1,64 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.bnksys.board.data.UserMapper">
+
+<select id="findAllUserCount" parameterType="User" resultType="long">
+	/* kr.co.bnksys.board.data.UserMapper.findAllUserCount */
+	SELECT COUNT(ID)
+	  FROM BNK_DB.TB_BFWM_USER
+	 WHERE USE_YN = 'Y'
+	 <if test="user.userId != null and !''.equals(user.userId)">
+	 	AND USER_ID LIKE '%' || #{userId} || '%'
+	 </if>
+</select>
+
+<select id="findAllUser" resultType="User">
+	/* kr.co.bnksys.board.data.UserMapper.findAllUser */
+	SELECT * FROM ( SELECT ROWNUM AS RN, TB.* FROM (
+		SELECT ID
+		     , USER_ID
+		     , PASSWORD
+		     , NAME
+		     , USE_YN
+		     , FST_RGPR_ID
+		     , FST_RG_DTTI
+		     , LT_CHPR_ID
+		     , LT_CH_DTTI
+		FROM BNK_DB.TB_BFWM_USER
+	   WHERE USE_YN = 'Y'
+	 <if test="user.userId != null and !''.equals(user.userId)">
+	 	AND USER_ID LIKE '%' || #{user.userId} || '%'
+	 </if>
+	 ORDER BY ID DESC
+	<![CDATA[ ) TB WHERE ROWNUM<=(#{pageable.page})*#{pageable.size}+#{pagea-ble.size}) WHERE RN>(#{pageable.page})*#{pageable.size} ]]>
+</select>
+
+<insert id="insertUser" parameterType="User">
+	/* kr.co.bnksys.board.data.UserMapper.insertUser */
+	<selectKey resultType="long" keyProperty="id" order="BEFORE">
+		SELECT NVL(MAX(ID), 0) + 1 AS id
+		  FROM BNK_DB.TB_BFWM_USER 
+	</selectKey>
+	INSERT INTO BNK_DB.TB_BFWM_USER
+	( ID
+	, USER_ID
+	, PASSWORD
+	, NAME
+	, USE_YN
+	, FST_RGPR_ID
+	, FST_RG_DTTI
+	, LT_CHPR_ID
+	, LT_CH_DTTI)
+	VALUES 
+	( #{id}
+	, #{userId}
+	, #{password}
+	, #{name}
+	, #{useYn}
+	, #{fstRgprId}
+	, #{fstRgDtti}
+	, #{ltChprId}
+	, #{ltChDtti}
+	)
+</insert>
+
+</mapper>
