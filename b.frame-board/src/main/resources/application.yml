@@ -1,6 +1,17 @@
 spring:
   datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    jdbc-url: jdbc:oracle:thin:@localhost:1521/xe
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    jdbc-url: jdbc:log4jdbc:oracle:thin:@localhost:1521/xe
     username: BNK_DB
     password: aa12345^
+    
+  mvc:
+    view:      prefix: /WEB-INF/views/
+      suffix: .jsp
+      
+logging:  level:
+    kr.co.bnksys.board: trace    jdbc.audit: error
+    jdbc.resultset: error
+    jdbc.sqlonly: error
+    jdbc.connection: error
+    org.springframework.web: debug
