@@ -1,7 +1,5 @@
 package kr.co.bnksys.board.config;
 
-import java.lang.management.PlatformManagedObject;
-
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.ExecutorType;
